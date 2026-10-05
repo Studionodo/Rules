@@ -1,0 +1,24 @@
+{
+  "name": "rules-pwa",
+  "private": true,
+  "version": "0.2.1",
+  "type": "module",
+  "scripts": {
+    "prepare-assets": "node scripts/copy-mediapipe.mjs && node scripts/fetch-model.mjs",
+    "predev": "npm run prepare-assets",
+    "dev": "vite",
+    "prebuild": "npm run check-i18n && npm run prepare-assets",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check-i18n": "node scripts/check-i18n.mjs"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "0.10.14",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.0"
+  }
+}
