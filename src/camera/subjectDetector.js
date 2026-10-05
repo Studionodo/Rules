@@ -1,6 +1,7 @@
-// Rilevamento del soggetto con MediaPipe Object Detector (EfficientDet-Lite0, 80 categorie COCO).
+// Rilevamento oggetti con MediaPipe Object Detector (EfficientDet-Lite0, 80 categorie COCO).
 // Caricato solo all'apertura della fotocamera: la pagina resta leggera.
-import { MEDIAPIPE_WASM, DETECTOR_MODELS } from '../config.js';
+// Il modello gira SOLO dopo che l'utente ha toccato il soggetto (vedi subjectTracker.js).
+import { MEDIAPIPE_WASM, DETECTOR_MODELS, DETECT_MIN_SCORE } from '../config.js';
 
 export async function createDetector() {
   const { FilesetResolver, ObjectDetector } = await import('@mediapipe/tasks-vision');
@@ -12,8 +13,8 @@ export async function createDetector() {
         return await ObjectDetector.createFromOptions(vision, {
           baseOptions: { modelAssetPath, delegate },
           runningMode: 'VIDEO',
-          scoreThreshold: 0.45,
-          maxResults: 5
+          scoreThreshold: DETECT_MIN_SCORE,
+          maxResults: 10
         });
       } catch (err) {
         lastError = err;
@@ -23,22 +24,23 @@ export async function createDetector() {
   throw lastError || new Error('Rilevamento non disponibile');
 }
 
-// Sceglie il soggetto principale: punteggio × dimensione, con preferenza per le persone.
-// Esclude ciò che riempie quasi tutto il fotogramma (non è un soggetto, è la scena).
-export function pickSubject(detections, vw, vh) {
-  let best = null;
-  let bestScore = 0;
+// Converte i riquadri del modello (pixel del video) in pixel del mirino.
+// Con la fotocamera frontale l'anteprima è specchiata: si specchia anche il riquadro.
+export function mapDetections(detections, videoW, W, mirror) {
+  const s = W / videoW;
+  const out = [];
   for (const d of detections || []) {
     const cat = d.categories && d.categories[0];
     if (!cat || !d.boundingBox) continue;
     const { originX, originY, width, height } = d.boundingBox;
-    const area = (width * height) / (vw * vh);
-    if (area > 0.7) continue;
-    const s = cat.score * Math.sqrt(area) * (cat.categoryName === 'person' ? 1.25 : 1);
-    if (s > bestScore) {
-      bestScore = s;
-      best = { x: originX, y: originY, w: width, h: height, category: cat.categoryName };
-    }
+    out.push({
+      category: cat.categoryName,
+      score: cat.score,
+      x: mirror ? W - (originX + width) * s : originX * s,
+      y: originY * s,
+      w: width * s,
+      h: height * s
+    });
   }
-  return best;
+  return out;
 }

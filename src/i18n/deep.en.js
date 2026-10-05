@@ -20,7 +20,7 @@ export const DEEP = {
         "Choose the intersection by direction: someone looking or walking to the right goes on the left, so they have space in front of them.",
         "Horizon on the lower line if the sky tells the story, on the upper line if the land does.",
         "In a portrait, the point to place on the intersection is the eye closest to the lens, not the center of the face.",
-        "In Rules, the teal circle confirms when the subject lands on a power point."
+        "In Rules, tap your subject on the screen: the teal circle confirms when it lands on a power point."
       ] },
       { t: "Common mistakes", li: [
         "Applying it to everything: twenty photos with the subject always top right become a formula.",

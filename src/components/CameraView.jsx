@@ -2,8 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { APP_NAME, DETECT_INTERVAL_MS } from '../config.js';
 import { FILM_PROFILES, DEFAULT_PROFILE } from '../camera/filmProfiles.js';
 import { FilmRenderer, captureFrame } from '../camera/filmRenderer.js';
-import { createDetector, pickSubject } from '../camera/subjectDetector.js';
-import { analyze, smoothBox } from '../camera/composition.js';
+import { createDetector, mapDetections } from '../camera/subjectDetector.js';
+import { analyze } from '../camera/composition.js';
+import { SubjectTracker } from '../camera/subjectTracker.js';
+import { IS_ANDROID, IS_IOS, downloadUrl } from '../camera/platform.js';
 import { useLevel } from '../camera/useLevel.js';
 import { useLang } from '../i18n/LangContext.jsx';
 
@@ -32,8 +34,9 @@ export default function CameraView({ onClose }) {
   const streamRef = useRef(null);
   const vfRef = useRef({ w: 0, h: 0 });
   const mirrorRef = useRef(false);
-  const boxRef = useRef(null);
-  const lostAtRef = useRef(null);
+  const trackerRef = useRef(null);
+  if (trackerRef.current === null) trackerRef.current = new SubjectTracker();
+  const toastTimerRef = useRef(null);
   const shotUrlRef = useRef(null);
 
   const [facing, setFacing] = useState('environment');
@@ -45,6 +48,9 @@ export default function CameraView({ onClose }) {
   const [profileId, setProfileId] = useState(DEFAULT_PROFILE);
   const [detectState, setDetectState] = useState('loading');
   const [subject, setSubject] = useState(null);
+  const [trackState, setTrackState] = useState('idle');
+  const [tapPoint, setTapPoint] = useState(null);
+  const [toast, setToast] = useState('');
   const [lastShot, setLastShot] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [flash, setFlash] = useState(false);
@@ -155,7 +161,16 @@ export default function CameraView({ onClose }) {
     };
   }, []);
 
-  // Ciclo: disegno a ogni fotogramma, analisi ogni DETECT_INTERVAL_MS.
+  // Fotografia dello stato del tracciamento per l'interfaccia.
+  const publish = useCallback(() => {
+    const tr = trackerRef.current;
+    const { w: W, h: H } = vfRef.current;
+    setTrackState(tr.state);
+    setTapPoint(tr.state === 'seeking' ? { x: tr.tapX, y: tr.tapY } : null);
+    setSubject(tr.state === 'tracking' && tr.box && W ? { box: tr.box, ...analyze(tr.box, W, H) } : null);
+  }, []);
+
+  // Ciclo: disegno a ogni fotogramma. Il rilevatore gira solo dopo un tocco sul soggetto.
   useEffect(() => {
     let raf;
     let lastDetect = 0;
@@ -166,32 +181,47 @@ export default function CameraView({ onClose }) {
       if (!video || !r || video.readyState < 2 || !video.videoWidth) return;
       r.render(video, { mirror: mirrorRef.current });
 
+      const tracker = trackerRef.current;
+      const now = performance.now();
+      const before = tracker.state;
+      tracker.tick(now);
+      if (tracker.state !== before) publish();
+
       const det = detectorRef.current;
-      const { w: W, h: H } = vfRef.current;
-      if (!det || !W || t - lastDetect < DETECT_INTERVAL_MS) return;
+      const { w: W } = vfRef.current;
+      if (!det || !W || !tracker.wantsDetection() || t - lastDetect < DETECT_INTERVAL_MS) return;
       lastDetect = t;
       try {
-        const res = det.detectForVideo(video, performance.now());
-        const pick = pickSubject(res.detections, video.videoWidth, video.videoHeight);
-        if (pick) {
-          const s = W / video.videoWidth;
-          const x = mirrorRef.current ? W - (pick.x + pick.w) * s : pick.x * s;
-          const mapped = { category: pick.category, x, y: pick.y * s, w: pick.w * s, h: pick.h * s };
-          const box = smoothBox(boxRef.current, mapped);
-          boxRef.current = box;
-          lostAtRef.current = null;
-          setSubject({ box, ...analyze(box, W, H) });
-        } else if (boxRef.current) {
-          if (lostAtRef.current == null) lostAtRef.current = t;
-          else if (t - lostAtRef.current > 500) { boxRef.current = null; setSubject(null); }
-        }
+        const res = det.detectForVideo(video, now);
+        tracker.update(mapDetections(res.detections, video.videoWidth, W, mirrorRef.current), now);
+        publish();
       } catch {
         // Un fotogramma saltato non deve fermare il ciclo.
       }
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [publish]);
+
+  // Tocco sul mirino: sceglie il soggetto. Un nuovo tocco sostituisce il precedente.
+  const selectAt = useCallback((x, y) => {
+    if (status !== 'live' || detectState !== 'ready') return;
+    trackerRef.current.start(x, y, performance.now());
+    publish();
+  }, [status, detectState, publish]);
+
+  const onTap = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    selectAt(e.clientX - rect.left, e.clientY - rect.top);
+  }, [selectAt]);
+
+  // Da tastiera (accessibilità): Invio o Spazio scelgono il soggetto al centro del mirino.
+  const onViewfinderKey = useCallback((e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    const { w: W, h: H } = vfRef.current;
+    selectAt(W / 2, H / 2);
+  }, [selectAt]);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') (sheetOpen ? setSheetOpen(false) : onClose()); };
@@ -199,7 +229,16 @@ export default function CameraView({ onClose }) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose, sheetOpen]);
 
-  useEffect(() => () => { if (shotUrlRef.current) URL.revokeObjectURL(shotUrlRef.current); }, []);
+  useEffect(() => () => {
+    if (shotUrlRef.current) URL.revokeObjectURL(shotUrlRef.current);
+    clearTimeout(toastTimerRef.current);
+  }, []);
+
+  const showToast = useCallback((msg) => {
+    setToast(msg);
+    clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => setToast(''), 2200);
+  }, []);
 
   const shoot = useCallback(async () => {
     const video = videoRef.current;
@@ -214,11 +253,17 @@ export default function CameraView({ onClose }) {
       const url = URL.createObjectURL(blob);
       shotUrlRef.current = url;
       const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-      setLastShot({ url, blob, profileName: profile.name, name: `${APP_NAME.toLowerCase()}-${profile.id}-${stamp}.jpg` });
+      const name = `${APP_NAME.toLowerCase()}-${profile.id}-${stamp}.jpg`;
+      setLastShot({ url, blob, profileName: profile.name, name });
+      // Android: salvataggio automatico nei Download. iPhone: serve il tocco su "Salva in Foto".
+      if (IS_ANDROID) {
+        downloadUrl(url, name);
+        showToast(t('toast.saved'));
+      }
     } catch {
       setError('err.shot');
     }
-  }, [status, profile]);
+  }, [status, profile, showToast, t]);
 
   const share = useCallback(async () => {
     if (!lastShot) return;
@@ -246,8 +291,11 @@ export default function CameraView({ onClose }) {
   if (status !== 'live') pill = null;
   else if (detectState === 'loading') pill = { text: t('cam.detect.loading'), color: PAPER };
   else if (detectState === 'failed') pill = { text: t('cam.detect.failed'), color: PAPER };
-  else if (!subject) pill = { text: t('cam.detect.none'), color: PAPER };
-  else pill = { text: t(`state.${subject.state}`), color: subject.state === 'on' ? TEAL : PAPER };
+  else if (trackState === 'seeking') pill = { text: t('cam.seeking'), color: PAPER };
+  else if (trackState === 'none') pill = { text: t('cam.detect.none'), color: PAPER };
+  else if (trackState === 'lost') pill = { text: t('cam.lost'), color: PAPER };
+  else if (trackState === 'tracking' && subject) pill = { text: t(`state.${subject.state}`), color: subject.state === 'on' ? TEAL : PAPER };
+  else pill = { text: t('cam.tapHint'), color: PAPER };
 
   const sc = subject && (subject.state === 'on' ? TEAL : PAPER);
   const b = subject && subject.box;
@@ -275,7 +323,15 @@ export default function CameraView({ onClose }) {
       </div>
 
       <div className="cam-stage" ref={stageRef}>
-        <div className="vf" style={{ width: vf.w, height: vf.h }}>
+        <div
+          className="vf"
+          style={{ width: vf.w, height: vf.h }}
+          onClick={onTap}
+          onKeyDown={onViewfinderKey}
+          role="button"
+          tabIndex={0}
+          aria-label={t('cam.viewfinder')}
+        >
           <video ref={videoRef} className="vf-video" playsInline muted autoPlay />
           <canvas ref={canvasRef} className="vf-canvas" />
           {vf.w > 0 && (
@@ -288,6 +344,7 @@ export default function CameraView({ onClose }) {
                   <line x1="0" y1={(2 * vf.h) / 3} x2={vf.w} y2={(2 * vf.h) / 3} />
                 </g>
               )}
+              {tapPoint && <circle className="tap-ring" cx={tapPoint.x} cy={tapPoint.y} r="22" fill="none" stroke={PAPER} strokeWidth="2" />}
               {subject && (
                 <g>
                   <g stroke={sc} strokeWidth="2" fill="none">
@@ -312,6 +369,7 @@ export default function CameraView({ onClose }) {
           {flash && <div className="vf-flash" />}
         </div>
 
+        {toast && <div className="glass-pill toast" role="status">{toast}</div>}
         {status === 'error' && <p className="cam-error" role="alert">{t(error)}</p>}
         {status === 'starting' && <p className="cam-hint">{t('cam.starting')}</p>}
         {pill && (
@@ -351,7 +409,7 @@ export default function CameraView({ onClose }) {
           <button
             type="button"
             className="flip"
-            onClick={() => { boxRef.current = null; setSubject(null); setFacing((f) => (f === 'user' ? 'environment' : 'user')); }}
+            onClick={() => { trackerRef.current.reset(); publish(); setFacing((f) => (f === 'user' ? 'environment' : 'user')); }}
             aria-label={t('cam.flip')}
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={PAPER} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8" /><path d="M4 4v4h4" /><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16" /><path d="M20 20v-4h-4" /></svg>
@@ -363,8 +421,8 @@ export default function CameraView({ onClose }) {
         <div className="sheet" role="dialog" aria-modal="true" aria-label={t('shot.dialog')}>
           <img src={lastShot.url} alt={t('shot.alt', { name: lastShot.profileName })} />
           <div className="sheet-actions">
-            {canShare && <button type="button" className="btn-paper" onClick={share}>{t('shot.share')}</button>}
-            <a className="btn-glass" href={lastShot.url} download={lastShot.name}>{t('shot.save')}</a>
+            {canShare && <button type="button" className="btn-paper" onClick={share}>{IS_IOS ? t('shot.saveToPhotos') : t('shot.share')}</button>}
+            {(!IS_IOS || !canShare) && <a className="btn-glass" href={lastShot.url} download={lastShot.name}>{t('shot.save')}</a>}
             <button type="button" className="btn-glass" onClick={() => setSheetOpen(false)}>{t('shot.close')}</button>
           </div>
         </div>

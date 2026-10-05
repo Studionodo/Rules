@@ -4,6 +4,4 @@ dist
 .vercel
 public/mediapipe
 public/models
-
-.vercel
-.env*
+.env*.local

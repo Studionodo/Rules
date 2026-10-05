@@ -1,6 +1,6 @@
 // Service worker di Rules: app utilizzabile offline dopo la prima visita.
 // Cambia VERSION a ogni rilascio per forzare l'aggiornamento della cache.
-const VERSION = 'rules-v0.2.1';
+const VERSION = 'rules-v0.3.0';
 const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/favicon.svg',
   '/icons/icon-192.png', '/icons/icon-512.png'];
 
