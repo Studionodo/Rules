@@ -44,3 +44,47 @@ export const GESTALT = [
   { id: 'chiusura', title: 'Closure', body: 'The brain completes what is missing. Leaving part outside the frame draws the viewer in.' },
   { id: 'pregnanza', title: 'Prägnanz', body: 'Among several readings, the simplest wins. Fewer elements, stronger image.' }
 ];
+
+// Tools: how to build the image. Each one rests on a Gestalt principle ("principle" field).
+export const TOOLS = [
+  {
+    id: 'linee',
+    num: '05',
+    title: 'Leading lines',
+    body: 'Roads, fences, rivers, tracks, the edge of a wall: lines the eye follows on its own. Start one at a corner or the bottom edge and let it end at the subject: the image takes the viewer where you want.',
+    breakIt: 'A line that leaves the frame creates anticipation and mystery, when it is a choice.',
+    principle: 'continuita'
+  },
+  {
+    id: 'cornice',
+    num: '06',
+    title: 'Frame within a frame',
+    body: 'A window, an arch, a door or some branches can enclose the subject. The frame isolates it, adds depth and tells the viewer where to rest the eye. It often works best when it is darker than the subject.',
+    breakIt: 'If the frame is more interesting than the subject, or crushes it, leave it out.',
+    principle: 'chiusura'
+  },
+  {
+    id: 'negativo',
+    num: '07',
+    title: 'Negative space',
+    body: 'The emptiness around the subject is not a lack: it is what gives it weight. Sky, a smooth wall, water or fog let the image breathe and speak of solitude, scale, silence.',
+    breakIt: 'If the emptiness says nothing, the subject is just too small: get closer.',
+    principle: 'figura'
+  },
+  {
+    id: 'riempi',
+    num: '08',
+    title: 'Fill the frame',
+    body: 'Get close until the subject dominates and the rest disappears. Remove background and distractions and show what cannot be seen from afar: a hand, a glance, a texture. The viewer has no doubt about what to look at.',
+    breakIt: 'When context is part of the story, a whole setting says more than a detail.',
+    principle: 'pregnanza'
+  },
+  {
+    id: 'dispari',
+    num: '09',
+    title: 'Rule of odds',
+    body: 'Three elements, five, seven: odd groups look more natural than even ones, because there is always a central element and the others accompany it. It is a heuristic, not a law: it helps loosen compositions that are too rigid.',
+    breakIt: 'A pair is already a relationship: two people looking at each other do not need a third.',
+    principle: 'vicinanza'
+  }
+];

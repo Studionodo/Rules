@@ -27,7 +27,7 @@ function MoreButton({ id, title, onOpen, dark = false }) {
 
 export default function App() {
   const { t, content } = useLang();
-  const { RULES, GESTALT, DEEP } = content;
+  const { RULES, TOOLS, GESTALT, DEEP } = content;
   const [cameraOpen, setCameraOpen] = useState(false);
   const [deepId, setDeepId] = useState(null);
 
@@ -83,6 +83,7 @@ export default function App() {
 
         <nav className="index" aria-label={t('nav.label')}>
           {RULES.map((r) => <a key={r.id} href={`#${r.id}`}>{r.short}</a>)}
+          <a href="#strumenti">{t('nav.tools')}</a>
           <a href="#gestalt" className="is-key">Gestalt</a>
         </nav>
 
@@ -103,6 +104,30 @@ export default function App() {
             );
           })}
 
+          <div id="strumenti" className="group-head">
+            <span className="eyebrow">{t('tools.eyebrow')}</span>
+            <h2>{t('tools.title')}</h2>
+            <p>{t('tools.intro')}</p>
+          </div>
+
+          {TOOLS.map((r) => {
+            const Diagram = RULE_DIAGRAMS[r.id];
+            const basis = GESTALT.find((g) => g.id === r.principle);
+            return (
+              <section key={r.id} id={r.id} className="rule">
+                <div className="rule-head">
+                  <span className="rule-num">{r.num}</span>
+                  <h2>{r.title}</h2>
+                </div>
+                <div className="rule-figure"><Diagram /></div>
+                <p className="rule-body">{r.body}</p>
+                <p className="rule-break"><strong>{t('rule.break')}</strong> {r.breakIt}</p>
+                {basis && <p className="rule-basis"><strong>{t('tool.basedOn')}</strong> <a href={`#${basis.id}`}>{basis.title}</a></p>}
+                <MoreButton id={r.id} title={r.title} onOpen={openDeep} />
+              </section>
+            );
+          })}
+
           <section id="gestalt" className="gestalt">
             <span className="eyebrow">{t('gestalt.eyebrow')}</span>
             <h2>{t('gestalt.title')}</h2>
@@ -111,7 +136,7 @@ export default function App() {
               {GESTALT.map((g) => {
                 const Glyph = GESTALT_GLYPHS[g.id];
                 return (
-                  <article key={g.id} className="principle">
+                  <article key={g.id} id={g.id} className="principle">
                     <Glyph />
                     <h3>{g.title}</h3>
                     <p>{g.body}</p>

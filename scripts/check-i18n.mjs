@@ -14,19 +14,32 @@ const keysEn = Object.keys(STRINGS.en);
 keysIt.filter((k) => !(k in STRINGS.en)).forEach((k) => errors.push(`inglese: manca la chiave "${k}"`));
 keysEn.filter((k) => !(k in STRINGS.it)).forEach((k) => errors.push(`italiano: manca la chiave "${k}"`));
 
-for (const list of ['RULES', 'GESTALT']) {
+for (const list of ['RULES', 'TOOLS', 'GESTALT']) {
   const a = it[list].map((x) => x.id).join(',');
   const b = en[list].map((x) => x.id).join(',');
   if (a !== b) errors.push(`${list}: id diversi tra le lingue (${a} / ${b})`);
 }
 
-const ids = [...it.RULES, ...it.GESTALT].map((x) => x.id);
+const ids = [...it.RULES, ...it.TOOLS, ...it.GESTALT].map((x) => x.id);
+const KIND = {};
+it.RULES.forEach((x) => { KIND[x.id] = 'rule'; });
+it.TOOLS.forEach((x) => { KIND[x.id] = 'tool'; });
+it.GESTALT.forEach((x) => { KIND[x.id] = 'gestalt'; });
+
+// Ogni strumento deve indicare un principio Gestalt esistente, uguale nelle due lingue.
+const gestaltIds = it.GESTALT.map((x) => x.id);
+it.TOOLS.forEach((x, i) => {
+  const o = en.TOOLS[i];
+  if (!gestaltIds.includes(x.principle)) errors.push(`${x.id}: principio Gestalt inesistente (${x.principle})`);
+  if (!o || o.principle !== x.principle) errors.push(`${x.id}: principio diverso tra le lingue`);
+});
 for (const id of ids) {
   const a = deepIt[id];
   const b = deepEn[id];
   if (!a) { errors.push(`scheda italiana mancante: ${id}`); continue; }
   if (!b) { errors.push(`scheda inglese mancante: ${id}`); continue; }
   if (a.kind !== b.kind) errors.push(`${id}: tipo diverso (${a.kind} / ${b.kind})`);
+  if (a.kind !== KIND[id]) errors.push(`${id}: tipo atteso ${KIND[id]}, trovato ${a.kind}`);
   if (a.sections.length !== b.sections.length) errors.push(`${id}: numero di sezioni diverso`);
   a.sections.forEach((s, i) => {
     const o = b.sections[i];

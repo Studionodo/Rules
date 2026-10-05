@@ -6,9 +6,14 @@
 export const STRINGS = {
   it: {
     'meta.title': '{app}, composizione fotografica',
-    'meta.description': 'Regola dei terzi, griglia phi, spirale aurea, piani e Gestalt in una pagina. Con una fotocamera che riconosce il soggetto che tocchi e ti dice se è su un punto di forza.',
+    'meta.description': 'Regola dei terzi, griglia phi, spirale aurea, piani, strumenti di composizione e Gestalt in una pagina. Con una fotocamera che riconosce il soggetto che tocchi e ti dice se è su un punto di forza.',
 
     'nav.label': 'Sezioni',
+    'nav.tools': 'Strumenti',
+    'tools.eyebrow': 'Strumenti',
+    'tools.title': 'Come costruire l’immagine.',
+    'tools.intro': 'Le regole dicono dove mettere le cose. Questi strumenti dicono con cosa costruire la scena che hai davanti, e ognuno si regge su un principio della Gestalt.',
+    'tool.basedOn': 'Si regge su',
     'hero.eyebrow': 'Composizione fotografica',
     'hero.title1': 'Le regole spiegano.',
     'hero.title2': 'L’occhio decide.',
@@ -27,6 +32,7 @@ export const STRINGS = {
     'cam.loading': 'Apro la fotocamera…',
 
     'deep.kind.rule': 'Regola',
+    'deep.kind.tool': 'Strumento',
     'deep.kind.gestalt': 'Gestalt',
     'deep.exercise': 'Esercizio',
     'deep.close': 'Chiudi l’approfondimento',
@@ -35,6 +41,11 @@ export const STRINGS = {
     'dia.phi': 'Griglia phi confrontata con i terzi',
     'dia.spiral': 'Spirale aurea costruita su rettangoli aurei',
     'dia.planes': 'Tre piani di profondità: sfondo, intermedio, primo piano',
+    'dia.lines': 'Strada che converge verso il soggetto',
+    'dia.frame': 'Arco che racchiude il soggetto',
+    'dia.negative': 'Soggetto piccolo in un ampio spazio vuoto',
+    'dia.fill': 'Soggetto che occupa quasi tutto il fotogramma',
+    'dia.odds': 'Una coppia accanto a un gruppo di tre',
     'dia.planes.bg': '3 · sfondo',
     'dia.planes.mid': '2 · intermedio',
     'dia.planes.fg': '1 · primo',
@@ -110,9 +121,14 @@ export const STRINGS = {
 
   en: {
     'meta.title': '{app}, photographic composition',
-    'meta.description': 'Rule of thirds, phi grid, golden spiral, layers of depth and Gestalt on one page. With a camera that recognizes the subject you tap and tells you when it sits on a power point.',
+    'meta.description': 'Rule of thirds, phi grid, golden spiral, layers of depth, composition tools and Gestalt on one page. With a camera that recognizes the subject you tap and tells you when it sits on a power point.',
 
     'nav.label': 'Sections',
+    'nav.tools': 'Tools',
+    'tools.eyebrow': 'Tools',
+    'tools.title': 'How to build the image.',
+    'tools.intro': 'The rules tell you where to put things. These tools tell you what to build the scene in front of you with, and each one rests on a Gestalt principle.',
+    'tool.basedOn': 'Rests on',
     'hero.eyebrow': 'Photographic composition',
     'hero.title1': 'Rules explain.',
     'hero.title2': 'The eye decides.',
@@ -131,6 +147,7 @@ export const STRINGS = {
     'cam.loading': 'Opening the camera…',
 
     'deep.kind.rule': 'Rule',
+    'deep.kind.tool': 'Tool',
     'deep.kind.gestalt': 'Gestalt',
     'deep.exercise': 'Exercise',
     'deep.close': 'Close',
@@ -139,6 +156,11 @@ export const STRINGS = {
     'dia.phi': 'Phi grid compared with the thirds',
     'dia.spiral': 'Golden spiral built on golden rectangles',
     'dia.planes': 'Three layers of depth: background, middle ground, foreground',
+    'dia.lines': 'Road converging toward the subject',
+    'dia.frame': 'Arch enclosing the subject',
+    'dia.negative': 'Small subject in a wide empty space',
+    'dia.fill': 'Subject filling almost the whole frame',
+    'dia.odds': 'A pair next to a group of three',
     'dia.planes.bg': '3 · background',
     'dia.planes.mid': '2 · middle',
     'dia.planes.fg': '1 · foreground',

@@ -12,8 +12,8 @@ export const LANGS = ['it', 'en'];
 const STORAGE_KEY = 'rules.lang';
 const LOCALES = { it: 'it-IT', en: 'en-US' };
 const CONTENT = {
-  it: { RULES: contentIt.RULES, GESTALT: contentIt.GESTALT, DEEP: deepIt },
-  en: { RULES: contentEn.RULES, GESTALT: contentEn.GESTALT, DEEP: deepEn }
+  it: { RULES: contentIt.RULES, TOOLS: contentIt.TOOLS, GESTALT: contentIt.GESTALT, DEEP: deepIt },
+  en: { RULES: contentEn.RULES, TOOLS: contentEn.TOOLS, GESTALT: contentEn.GESTALT, DEEP: deepEn }
 };
 
 function detectLang() {

@@ -157,6 +157,15 @@ a:hover { color: var(--red-dark); }
 }
 .rule-break strong { color: var(--teal); font-weight: 600; }
 
+.group-head { padding: 28px 8px 4px; display: flex; flex-direction: column; gap: 10px; }
+.group-head h2 { margin: 0; font-family: var(--serif); font-size: 30px; font-weight: 500; line-height: 1.1; letter-spacing: -0.6px; }
+.group-head p { margin: 0; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.rule-basis { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.rule-basis strong { color: var(--ink); font-weight: 600; }
+.rule-basis a { color: var(--teal); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.rule-basis a:hover { color: #0E4F4B; }
+.principle:target { outline: 2px solid var(--teal-light); outline-offset: 3px; }
+
 .gestalt {
   background: var(--ink);
   color: var(--paper);
@@ -259,6 +268,7 @@ a:hover { color: var(--red-dark); }
 .deep-titles { display: flex; flex-direction: column; gap: 6px; }
 .deep-kind { font-size: 13px; font-weight: 600; color: var(--red); }
 .deep-kind.is-gestalt { color: var(--teal); }
+.deep-kind.is-tool { color: var(--ink); }
 .deep-head h2 {
   margin: 0;
   font-family: var(--serif);

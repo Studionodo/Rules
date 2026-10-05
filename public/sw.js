@@ -1,13 +1,13 @@
 // Service worker di Rules: app utilizzabile offline dopo la prima visita.
 // Cambia VERSION a ogni rilascio per forzare l'aggiornamento della cache.
-const VERSION = 'rules-v0.3.0';
+const VERSION = 'rules-v0.4.0';
 const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/favicon.svg',
   '/icons/icon-192.png', '/icons/icon-512.png'];
 
 // Risorse pesanti e immutabili: prima la cache.
 const CACHE_FIRST = ['/assets/', '/mediapipe/', '/models/', '/icons/'];
-// Risorse esterne: cache con aggiornamento in background.
-const SWR_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'storage.googleapis.com'];
+// Risorse esterne (solo la riserva del modello di riconoscimento): cache con aggiornamento in background.
+const SWR_HOSTS = ['storage.googleapis.com'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));

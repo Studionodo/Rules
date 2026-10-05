@@ -83,11 +83,83 @@ export function PlanesDiagram() {
   );
 }
 
+export function LinesDiagram() {
+  const { t } = useLang();
+  return (
+    <svg viewBox="0 0 300 185" width="100%" role="img" aria-label={t('dia.lines')}>
+      <line x1="0" y1="76" x2="300" y2="76" stroke={INK} strokeOpacity="0.25" />
+      <g stroke={INK} strokeWidth="2" strokeLinecap="round">
+        <line x1="20" y1="185" x2="198" y2="78" />
+        <line x1="150" y1="185" x2="210" y2="78" />
+      </g>
+      <line x1="85" y1="185" x2="204" y2="78" stroke={TEAL} strokeWidth="2" strokeDasharray="10 8" />
+      <circle cx="204" cy="70" r="6" fill={RED} />
+    </svg>
+  );
+}
+
+export function FrameDiagram() {
+  const { t } = useLang();
+  return (
+    <svg viewBox="0 0 300 185" width="100%" role="img" aria-label={t('dia.frame')}>
+      <rect x="0" y="0" width="300" height="185" fill={INK} />
+      <path d="M92,185 V82 A58,58 0 0 1 208,82 V185 Z" fill="#CFC6B8" />
+      <polygon points="92,185 92,138 136,124 208,150 208,185" fill="#7FA39D" />
+      <circle cx="160" cy="112" r="6" fill={RED} />
+    </svg>
+  );
+}
+
+export function NegativeDiagram() {
+  const { t } = useLang();
+  return (
+    <svg viewBox="0 0 300 185" width="100%" role="img" aria-label={t('dia.negative')}>
+      <rect x="0" y="140" width="300" height="45" fill="#CFC6B8" />
+      <line x1="0" y1="140" x2="300" y2="140" stroke={INK} strokeOpacity="0.35" />
+      <rect x="226" y="124" width="7" height="16" rx="2" fill={INK} />
+      <circle cx="229.5" cy="119" r="4" fill={RED} />
+    </svg>
+  );
+}
+
+export function FillDiagram() {
+  const { t } = useLang();
+  return (
+    <svg viewBox="0 0 300 185" width="100%" role="img" aria-label={t('dia.fill')}>
+      <ellipse cx="150" cy="96" rx="136" ry="92" fill="#7FA39D" />
+      <circle cx="150" cy="92" r="42" fill={PAPER} />
+      <circle cx="150" cy="92" r="21" fill={INK} />
+      <circle cx="160" cy="83" r="5" fill={RED} />
+    </svg>
+  );
+}
+
+export function OddsDiagram() {
+  const { t } = useLang();
+  return (
+    <svg viewBox="0 0 300 185" width="100%" role="img" aria-label={t('dia.odds')}>
+      <line x1="120" y1="30" x2="120" y2="155" stroke={INK} strokeOpacity="0.25" strokeDasharray="3 5" />
+      <g fill="#CFC6B8">
+        <circle cx="38" cy="96" r="15" />
+        <circle cx="82" cy="96" r="15" />
+      </g>
+      <circle cx="160" cy="96" r="15" fill={INK} />
+      <circle cx="204" cy="96" r="15" fill={RED} />
+      <circle cx="248" cy="96" r="15" fill={INK} />
+    </svg>
+  );
+}
+
 export const RULE_DIAGRAMS = {
   terzi: ThirdsDiagram,
   phi: PhiDiagram,
   spirale: SpiralDiagram,
-  piani: PlanesDiagram
+  piani: PlanesDiagram,
+  linee: LinesDiagram,
+  cornice: FrameDiagram,
+  negativo: NegativeDiagram,
+  riempi: FillDiagram,
+  dispari: OddsDiagram
 };
 
 const glyph = (children) => (

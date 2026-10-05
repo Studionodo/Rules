@@ -43,3 +43,47 @@ export const GESTALT = [
   { id: 'chiusura', title: 'Chiusura', body: 'Il cervello completa ciò che manca. Lasciare una parte fuori campo coinvolge chi guarda.' },
   { id: 'pregnanza', title: 'Pregnanza', body: 'Tra più letture vince la più semplice. Meno elementi, immagine più forte.' }
 ];
+
+// Strumenti: come costruire l'immagine. Ognuno si appoggia a un principio della Gestalt (campo "principle").
+export const TOOLS = [
+  {
+    id: 'linee',
+    num: '05',
+    title: 'Linee guida',
+    body: 'Strade, recinzioni, fiumi, binari, il bordo di un muro: sono linee che l’occhio segue da sé. Falla partire da un angolo o dal bordo basso e falla arrivare al soggetto: l’immagine porta chi guarda dove vuoi tu.',
+    breakIt: 'Una linea che esce dal fotogramma crea attesa e mistero, se è una scelta.',
+    principle: 'continuita'
+  },
+  {
+    id: 'cornice',
+    num: '06',
+    title: 'Cornice nella cornice',
+    body: 'Una finestra, un arco, una porta o dei rami possono racchiudere il soggetto. La cornice lo isola, aggiunge profondità e dice a chi guarda dove posare lo sguardo. Spesso funziona meglio se è più scura del soggetto.',
+    breakIt: 'Se la cornice è più interessante del soggetto, o lo schiaccia, meglio toglierla.',
+    principle: 'chiusura'
+  },
+  {
+    id: 'negativo',
+    num: '07',
+    title: 'Spazio negativo',
+    body: 'Il vuoto intorno al soggetto non è una mancanza: è ciò che gli dà peso. Cielo, un muro liscio, acqua o nebbia fanno respirare l’immagine e raccontano solitudine, scala, silenzio.',
+    breakIt: 'Se il vuoto non dice nulla, è solo un soggetto troppo piccolo: avvicinati.',
+    principle: 'figura'
+  },
+  {
+    id: 'riempi',
+    num: '08',
+    title: 'Riempi il fotogramma',
+    body: 'Avvicinati finché il soggetto domina e il resto sparisce. Togli sfondo e distrazioni e mostra ciò che da lontano non si vede: una mano, uno sguardo, una texture. Chi guarda non ha dubbi su cosa guardare.',
+    breakIt: 'Quando il contesto è parte del racconto, un ambiente intero dice più di un dettaglio.',
+    principle: 'pregnanza'
+  },
+  {
+    id: 'dispari',
+    num: '09',
+    title: 'Regola dei dispari',
+    body: 'Tre elementi, cinque, sette: gli insiemi dispari sembrano più naturali di quelli pari, perché c’è sempre un elemento centrale e gli altri lo accompagnano. È un’euristica, non una legge: serve a sciogliere le composizioni troppo rigide.',
+    breakIt: 'Una coppia è già una relazione: due persone che si guardano non hanno bisogno di un terzo.',
+    principle: 'vicinanza'
+  }
+];

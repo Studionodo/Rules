@@ -28,7 +28,7 @@ export default function DeepDive({ entry, onClose }) {
       <div className="deep-card">
         <header className="deep-head">
           <div className="deep-titles">
-            <span className={`deep-kind${entry.kind === 'gestalt' ? ' is-gestalt' : ''}`}>{t(`deep.kind.${entry.kind}`)}</span>
+            <span className={`deep-kind is-${entry.kind}`}>{t(`deep.kind.${entry.kind}`)}</span>
             <h2 id="deep-title">{entry.title}</h2>
           </div>
           <button type="button" className="deep-close" onClick={() => ref.current.close()} aria-label={t('deep.close')}>

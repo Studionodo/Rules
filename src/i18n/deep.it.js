@@ -310,5 +310,165 @@ export const DEEP = {
       ] }
     ],
     exercise: "Per un’uscita intera scatta solo immagini con al massimo tre elementi riconoscibili. Contali prima di premere il pulsante. Al ritorno scegli la foto più semplice e quella più ricca, e chiediti quale ricorderai tra un mese."
+  },
+
+  linee: {
+    kind: "tool",
+    title: "Linee guida",
+    sections: [
+      { t: "Cos’è", p: [
+        "Le linee guida sono linee presenti nella scena, come una strada, un binario, una recinzione, il bordo di un fiume o di un muro, che portano lo sguardo verso un punto. Non bisogna crearle: bisogna riconoscerle e decidere da dove far partire l’occhio e dove farlo arrivare.",
+        "Sono lo strumento pratico della continuità: l’occhio segue una linea finché può, e chi la segue arriva dove l’hai fatta finire."
+      ] },
+      { t: "Perché funziona", p: [
+        "Il cervello preferisce i percorsi lisci a quelli spezzati, e quando incontra una linea la percorre quasi senza accorgersene. Una linea che converge in profondità, come una strada che si restringe, aggiunge anche un’illusione di distanza, perché le parallele sembrano avvicinarsi man mano che si allontanano.",
+        "Il risultato è un’immagine con un ordine di lettura: si entra da un punto, si attraversa la scena, si arriva al soggetto. È la differenza tra una foto in cui l’occhio vaga e una in cui viene accompagnato."
+      ] },
+      { t: "Come usarle sul campo", li: [
+        "Prima di scattare guarda il terreno, non solo il soggetto: strade, scale, ombre lunghe e muretti sono linee già pronte.",
+        "Fai entrare la linea da un angolo o dal bordo basso del fotogramma: è da lì che chi guarda comincia a leggere.",
+        "Verifica dove finisce: deve portare al soggetto, non fuori dall’immagine e non su un punto morto.",
+        "Abbassati o spostati di lato: pochi passi cambiano l’angolo e decidono se la linea converge, curva o taglia la scena.",
+        "Con un grandangolare le linee in profondità convergono di più; con un teleobiettivo si appiattiscono e si avvicinano."
+      ] },
+      { t: "Errori tipici", li: [
+        "Una linea che porta fuori dal fotogramma, verso un angolo vuoto: l’occhio esce e non torna.",
+        "Troppe linee in direzioni diverse: si contendono lo sguardo e nessuna porta da nessuna parte.",
+        "Una linea che attraversa il soggetto o gli spunta dalla testa, come un palo o un orizzonte.",
+        "Usare una linea solo perché c’è: se non conduce a qualcosa, è solo una riga in mezzo alla foto."
+      ] },
+      { t: "Quando infrangerle", p: [
+        "Una linea che esce dal campo o si interrompe crea attesa e mistero: una strada che sparisce dietro una curva fa nascere una domanda invece di dare una risposta. Anche le linee orizzontali, che calmano invece di condurre, sono una scelta valida quando vuoi quiete e non movimento."
+      ] }
+    ],
+    exercise: "Per un’ora fotografa solo strade, scale, recinzioni e bordi che portano a qualcosa. Per ogni scatto scrivi dove entra l’occhio e dove arriva. Poi rifai una scena aspettando che una persona o un oggetto arrivi alla fine della linea: vedrai la differenza tra una foto di linee e una foto con un soggetto."
+  },
+
+  cornice: {
+    kind: "tool",
+    title: "Cornice nella cornice",
+    sections: [
+      { t: "Cos’è", p: [
+        "Consiste nel racchiudere il soggetto dentro un elemento della scena che fa da cornice: una finestra, un arco, una porta, il varco tra due edifici, i rami di un albero, perfino le braccia di una persona. La cornice sta in primo piano o intorno, il soggetto sta dentro o oltre.",
+        "È un modo di usare i piani insieme alla chiusura: la cornice dà profondità e il cervello completa la forma che racchiude."
+      ] },
+      { t: "Perché funziona", p: [
+        "Una cornice dice a chi guarda dove guardare: tutto ciò che sta dentro diventa importante, tutto ciò che sta fuori diventa contesto. Isola il soggetto da ciò che lo circonda e riduce le distrazioni, perché il bordo della cornice taglia fuori ciò che non serve.",
+        "Aggiunge anche profondità: la cornice è un primo piano, il soggetto un piano intermedio o lontano, e tra i due l’occhio percorre uno spazio. Spesso la cornice è più scura del soggetto, e il contrasto lo fa risaltare."
+      ] },
+      { t: "Come usarla sul campo", li: [
+        "Cerca aperture: varchi, finestre, archi, portici, rami. Cammina intorno finché il soggetto compare nel punto giusto della cornice.",
+        "Esponi per il soggetto, non per la cornice: se la cornice diventa una sagoma scura va benissimo, anzi aiuta.",
+        "Metti il soggetto su un punto di forza dentro la cornice, non per forza al centro: la cornice è un nuovo fotogramma dentro il fotogramma.",
+        "Controlla i bordi della cornice: devono essere puliti e leggibili, non tagliati a caso.",
+        "Gioca con la messa a fuoco: una cornice sfocata in primo piano e un soggetto nitido è una soluzione classica."
+      ] },
+      { t: "Errori tipici", li: [
+        "Una cornice più interessante del soggetto, che ruba l’attenzione.",
+        "Una cornice che schiaccia il soggetto o lo copre in parte senza motivo.",
+        "Zone molto luminose sul bordo della cornice, come una finestra bruciata, che attirano l’occhio fuori dal soggetto.",
+        "Usarla come trucco: se la cornice non ha relazione con il soggetto, è solo un bordo aggiunto."
+      ] },
+      { t: "Quando infrangerla", p: [
+        "Quando il soggetto ha bisogno di aria e di ambiente intorno, o quando la cornice appesantisce, meglio toglierla. Una cornice che nasconde molto può anche essere una scelta narrativa: vedere qualcosa attraverso una fessura, di nascosto, racconta attesa, distanza, a volte sguardo indiscreto."
+      ] }
+    ],
+    exercise: "Scegli un luogo con molte aperture: un portico, una piazza con archi, un corridoio con finestre. Fotografa la stessa persona o lo stesso oggetto da tre posizioni diverse, usando ogni volta una cornice diversa. Poi guarda quale cornice aggiunge senso e quale è solo decorazione."
+  },
+
+  negativo: {
+    kind: "tool",
+    title: "Spazio negativo",
+    sections: [
+      { t: "Cos’è", p: [
+        "Lo spazio negativo è l’area vuota o poco interessante intorno al soggetto: cielo, un muro liscio, acqua calma, nebbia, neve, un fondale uniforme. Non è un errore da riempire, è un elemento della composizione, come il silenzio in una frase.",
+        "Il soggetto è lo spazio positivo: il vuoto che lo circonda lo mette in risalto e gli dà peso."
+      ] },
+      { t: "Perché funziona", p: [
+        "È figura e sfondo in forma estrema: più lo sfondo è semplice, più la figura emerge. Il vuoto riposa l’occhio e lo costringe a posarsi sul soggetto, perché non ha altro dove andare.",
+        "Inoltre lo spazio comunica. Un piccolo soggetto in uno spazio enorme racconta solitudine, scala, silenzio; lo stesso soggetto stretto nel fotogramma racconta altro. Anche dove metti il vuoto conta: davanti a una figura che cammina dà respiro al movimento, dietro dà peso a ciò che lascia."
+      ] },
+      { t: "Come usarlo sul campo", li: [
+        "Cerca sfondi semplici: cielo, muri, sabbia, acqua, neve. Poi aspetta che il soggetto entri nel punto giusto.",
+        "Rendi il soggetto piccolo allontanandoti o usando un grandangolare: la distanza crea lo spazio.",
+        "Decidi da che parte sta il vuoto: davanti al soggetto, nella direzione dello sguardo o del movimento, per dare respiro; dietro, per dare peso.",
+        "Sfrutta l’esposizione: un cielo chiaro con un soggetto scuro, o il contrario, rende il vuoto più pulito.",
+        "Togli: se in un angolo c’è un elemento che non serve, cambia inquadratura finché sparisce."
+      ] },
+      { t: "Errori tipici", li: [
+        "Un vuoto che non dice nulla: un soggetto piccolo e basta, senza relazione con lo spazio.",
+        "Un vuoto sporco: fili, cartelli, macchie nel cielo o nel muro che disturbano il silenzio.",
+        "Il soggetto messo al centro del vuoto, senza equilibrio: lo spazio negativo funziona quasi sempre meglio con il soggetto decentrato.",
+        "Confonderlo con una foto sottoesposta o sovraesposta: il vuoto deve avere tono e carattere."
+      ] },
+      { t: "Quando infrangerlo", p: [
+        "Dove il tema è l’affollamento, un mercato, una folla, una festa, il vuoto toglierebbe verità alla scena. E con un soggetto che racconta solo da vicino, un volto, una mano, riempire il fotogramma funziona meglio."
+      ] }
+    ],
+    exercise: "Fotografa lo stesso soggetto tre volte, partendo da vicino e allontanandoti passo dopo passo. Nota a che distanza il vuoto comincia a diventare significato e a che distanza diventa solo spazio perso. Poi ripeti con il vuoto dietro e con il vuoto davanti, e confronta come cambia la sensazione di movimento."
+  },
+
+  riempi: {
+    kind: "tool",
+    title: "Riempi il fotogramma",
+    sections: [
+      { t: "Cos’è", p: [
+        "Significa avvicinarsi al soggetto, fisicamente o con lo zoom, finché occupa gran parte dell’immagine e lo sfondo sparisce o diventa solo un’idea. Meno scena, più soggetto: un volto, una mano, una texture, un dettaglio di architettura.",
+        "È l’opposto dello spazio negativo e funziona per la stessa ragione: toglie ciò che non serve. Una celebre massima attribuita a Robert Capa dice che se le foto non sono abbastanza buone, non sei abbastanza vicino."
+      ] },
+      { t: "Perché funziona", p: [
+        "È pregnanza: meno elementi, lettura più immediata. Quando il soggetto domina, chi guarda non ha dubbi su cosa guardare e la foto si legge in un istante.",
+        "Da vicino si vedono cose che da lontano non si vedono: la grana della pelle, la ruggine, l’espressione degli occhi. E la vicinanza fisica cambia anche il rapporto con chi fotografi: i ritratti più intensi nascono quasi sempre da vicino."
+      ] },
+      { t: "Come usarlo sul campo", li: [
+        "Prima di avvicinarti decidi qual è il dettaglio che racconta il tutto: gli occhi, le mani, un gesto, un oggetto.",
+        "Avvicinati con i piedi: lo zoom ingrandisce, ma il punto di vista cambia solo se ti muovi.",
+        "Controlla i bordi: tagliare una parte può rafforzare, ma taglia con decisione e lontano dalle articolazioni.",
+        "Con una persona, dai tempo: la prima vicinanza mette a disagio, dopo qualche minuto ci si dimentica di te e l’espressione si fa vera.",
+        "Controlla messa a fuoco ed esposizione, che da vicino sono meno tolleranti: la profondità di campo si riduce."
+      ] },
+      { t: "Errori tipici", li: [
+        "Avvicinarsi senza una ragione: un dettaglio che non racconta niente è solo un ritaglio.",
+        "Tagliare nel punto sbagliato: polsi, caviglie, la cima della testa a metà.",
+        "Distorcere i tratti: un grandangolare molto vicino a un volto li deforma.",
+        "Dimenticare il rispetto: avvicinarsi a una persona senza il suo consenso, dove serve, rovina il rapporto e la foto."
+      ] },
+      { t: "Quando infrangerlo", p: [
+        "Quando il contesto è parte del racconto, un ambiente intero dice più di un dettaglio: nel reportage e nel paesaggio la scena spesso è il soggetto. E dove il vuoto ha un significato, riempire il fotogramma toglierebbe quel significato."
+      ] }
+    ],
+    exercise: "Scegli un soggetto e fotografalo cinque volte, ogni volta più vicino: intero, a metà, a un quarto, un dettaglio, un dettaglio dentro il dettaglio. Poi scegli lo scatto in cui il soggetto smette di essere una cosa e diventa un’idea: di solito è il penultimo."
+  },
+
+  dispari: {
+    kind: "tool",
+    title: "Regola dei dispari",
+    sections: [
+      { t: "Cos’è", p: [
+        "Suggerisce di comporre con un numero dispari di elementi simili: tre persone, cinque alberi, sette finestre, invece di due, quattro o sei. Gli insiemi dispari sembrano più naturali e meno rigidi.",
+        "È un’euristica di bottega, non una legge, e non ha basi scientifiche solide. Funziona abbastanza spesso da essere utile, e va usata sapendo perché funziona."
+      ] },
+      { t: "Perché funziona", p: [
+        "In un gruppo dispari c’è sempre un elemento centrale e gli altri gli stanno intorno: l’occhio ha un punto di appoggio e la composizione ha un centro naturale senza essere simmetrica. Con un numero pari, invece, gli elementi si fronteggiano e l’insieme si divide a metà, il che può dare un effetto statico.",
+        "È una conseguenza della vicinanza: tre elementi vicini si leggono come un gruppo unico, e il gruppo ha una forma, spesso un triangolo, che è una delle più stabili e semplici per il cervello."
+      ] },
+      { t: "Come usarla sul campo", li: [
+        "Conta gli elementi prima di scattare: se sono quattro, puoi aspettare che uno esca oppure inquadrare in modo da escluderne uno.",
+        "Disponi i tre elementi in modo asimmetrico: un triangolo irregolare funziona meglio di una fila ordinata.",
+        "Usa differenze di dimensione, distanza o altezza: il gruppo di tre è più vivo se non sono tutti uguali.",
+        "Con le persone, due sono spesso già una relazione. Il terzo può essere chi osserva, chi si stacca, chi guarda in camera.",
+        "Conta solo gli elementi che l’occhio legge davvero come soggetti, non i particolari minori."
+      ] },
+      { t: "Errori tipici", li: [
+        "Applicarla in modo meccanico: contare gli oggetti senza chiedersi se contano.",
+        "Disporre i tre elementi in fila perfetta: l’immagine diventa rigida, da catalogo.",
+        "Forzare un terzo elemento che non c’entra solo per rispettare la regola.",
+        "Dimenticare che il bordo del fotogramma conta: un elemento tagliato dal margine cambia il numero."
+      ] },
+      { t: "Quando infrangerla", p: [
+        "Una coppia è già una storia: due persone che si guardano, due alberi che si specchiano, non hanno bisogno di un terzo elemento. Anche i numeri pari sono potenti quando cerchi simmetria, confronto, tensione tra due poli."
+      ] }
+    ],
+    exercise: "In un luogo con molta gente o molte cose uguali, panchine, alberi, finestre, scegli un gruppo di tre e fotografalo in tre modi: in fila, in triangolo, con uno leggermente separato. Poi togli o aggiungi un elemento passando a quattro e confronta. Scrivi una riga su cosa cambia nella sensazione di equilibrio."
   }
 };
