@@ -20,7 +20,7 @@ export const DEEP = {
         "Scegli l’incrocio in base alla direzione: chi guarda o cammina verso destra va messo a sinistra, così ha spazio davanti a sé.",
         "Orizzonte sulla linea bassa se il cielo racconta qualcosa, sulla linea alta se racconta la terra.",
         "Nel ritratto il punto da mettere sull’incrocio è l’occhio più vicino all’obiettivo, non il centro del viso.",
-        "In Rules tocca il soggetto sullo schermo: il cerchio verde acqua conferma quando cade su un punto di forza."
+        "In Rules attiva la griglia della fotocamera e porta il soggetto su uno dei quattro incroci."
       ] },
       { t: "Errori tipici", li: [
         "Applicarla a tutto: venti foto con il soggetto sempre in alto a destra diventano una formula.",

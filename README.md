@@ -6,7 +6,7 @@ Le regole spiegano. L'occhio decide.
 
 ## Cos'è
 
-Rules è una web app (PWA) per chi fotografa e vuole capire perché un'immagine funziona. In una sola pagina raccoglie le regole classiche della composizione, gli strumenti per costruire l'immagine e i principi della Gestalt, spiegati in modo semplice e approfonditi in schede dedicate. Quando sei sulla scena, apri la fotocamera, tocchi il soggetto e Rules ti dice se si trova su un punto di forza. Funziona offline dopo il primo caricamento, non ha account e non raccoglie dati.
+Rules è una web app (PWA) per chi fotografa e vuole capire perché un'immagine funziona. In una sola pagina raccoglie le regole classiche della composizione, gli strumenti per costruire l'immagine e i principi della Gestalt, spiegati in modo semplice e approfonditi in schede dedicate. Quando sei sulla scena, apri la fotocamera: griglia dei terzi, livella e profili colore ti aiutano a comporre. Funziona offline dopo il primo caricamento, non ha account e non raccoglie dati.
 
 ## Cosa fa
 
@@ -15,7 +15,6 @@ Rules è una web app (PWA) per chi fotografa e vuole capire perché un'immagine 
 - **La Gestalt:** figura e sfondo, vicinanza, somiglianza, continuità, chiusura e pregnanza, cioè il perché vediamo le immagini come le vediamo.
 - **Approfondimenti:** ogni voce ha una scheda dettagliata, scritta in modo comprensibile, con un esercizio pratico da fare sul campo.
 - **Fotocamera:** griglia dei terzi, livella dell'orizzonte e sette profili colore ispirati alle pellicole, applicati in tempo reale.
-- **Soggetto a tocco:** tocchi il soggetto sullo schermo, Rules lo segue mentre componi e ti dice quando cade su un punto di forza.
 - **Salvataggio:** su Android ogni scatto va in automatico nei Download, su iPhone c'è "Salva in Foto".
 - **Due lingue:** italiano e inglese, con il cambio in un tocco.
 
@@ -23,10 +22,10 @@ Rules è una web app (PWA) per chi fotografa e vuole capire perché un'immagine 
 
 1. Tocca **Inquadra** e consenti l'accesso alla fotocamera.
 2. Scegli un profilo colore.
-3. Tocca il soggetto sullo schermo: il riquadro lo aggancia e lo segue.
-4. Componi finché compare "Soggetto sul punto di forza", poi scatta.
+3. Tieni attiva la griglia e porta il soggetto su uno dei quattro incroci.
+4. Controlla la livella, poi scatta.
 
-Rules riconosce persone, animali, veicoli e oggetti di uso comune. Gli scatti sono appunti di composizione: hanno la risoluzione dell'anteprima video, non quella piena del sensore.
+Gli scatti sono appunti di composizione: hanno la risoluzione dell'anteprima video, non quella piena del sensore.
 
 ## Privacy
 

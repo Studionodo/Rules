@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { APP_NAME, DETECT_INTERVAL_MS } from '../config.js';
+import { APP_NAME } from '../config.js';
 import { FILM_PROFILES, DEFAULT_PROFILE } from '../camera/filmProfiles.js';
 import { FilmRenderer, captureFrame } from '../camera/filmRenderer.js';
-import { createDetector, mapDetections } from '../camera/subjectDetector.js';
-import { analyze } from '../camera/composition.js';
-import { SubjectTracker } from '../camera/subjectTracker.js';
 import { IS_ANDROID, IS_IOS, downloadUrl } from '../camera/platform.js';
 import { useLevel } from '../camera/useLevel.js';
 import { useLang } from '../i18n/LangContext.jsx';
@@ -30,12 +27,8 @@ export default function CameraView({ onClose }) {
   const stageRef = useRef(null);
   const closeRef = useRef(null);
   const rendererRef = useRef(null);
-  const detectorRef = useRef(null);
   const streamRef = useRef(null);
-  const vfRef = useRef({ w: 0, h: 0 });
   const mirrorRef = useRef(false);
-  const trackerRef = useRef(null);
-  if (trackerRef.current === null) trackerRef.current = new SubjectTracker();
   const toastTimerRef = useRef(null);
   const shotUrlRef = useRef(null);
 
@@ -46,10 +39,6 @@ export default function CameraView({ onClose }) {
   const [stageSize, setStageSize] = useState({ w: 0, h: 0 });
   const [gridOn, setGridOn] = useState(true);
   const [profileId, setProfileId] = useState(DEFAULT_PROFILE);
-  const [detectState, setDetectState] = useState('loading');
-  const [subject, setSubject] = useState(null);
-  const [trackState, setTrackState] = useState('idle');
-  const [tapPoint, setTapPoint] = useState(null);
   const [toast, setToast] = useState('');
   const [lastShot, setLastShot] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -69,7 +58,6 @@ export default function CameraView({ onClose }) {
     return { w: Math.floor(videoSize.w * s), h: Math.floor(videoSize.h * s) };
   }, [videoSize, stageSize]);
 
-  useEffect(() => { vfRef.current = vf; }, [vf]);
   useEffect(() => { mirrorRef.current = facing === 'user'; }, [facing]);
   useEffect(() => { closeRef.current && closeRef.current.focus(); }, []);
 
@@ -144,84 +132,19 @@ export default function CameraView({ onClose }) {
     };
   }, [facing]);
 
-  // Rilevatore: caricato una volta sola, in parallelo alla fotocamera.
-  useEffect(() => {
-    let alive = true;
-    createDetector()
-      .then((d) => {
-        if (!alive) { d.close(); return; }
-        detectorRef.current = d;
-        setDetectState('ready');
-      })
-      .catch(() => alive && setDetectState('failed'));
-    return () => {
-      alive = false;
-      if (detectorRef.current) detectorRef.current.close();
-      detectorRef.current = null;
-    };
-  }, []);
-
-  // Fotografia dello stato del tracciamento per l'interfaccia.
-  const publish = useCallback(() => {
-    const tr = trackerRef.current;
-    const { w: W, h: H } = vfRef.current;
-    setTrackState(tr.state);
-    setTapPoint(tr.state === 'seeking' ? { x: tr.tapX, y: tr.tapY } : null);
-    setSubject(tr.state === 'tracking' && tr.box && W ? { box: tr.box, ...analyze(tr.box, W, H) } : null);
-  }, []);
-
-  // Ciclo: disegno a ogni fotogramma. Il rilevatore gira solo dopo un tocco sul soggetto.
+  // Ciclo: disegno a ogni fotogramma.
   useEffect(() => {
     let raf;
-    let lastDetect = 0;
-    const loop = (t) => {
+    const loop = () => {
       raf = requestAnimationFrame(loop);
       const video = videoRef.current;
       const r = rendererRef.current;
       if (!video || !r || video.readyState < 2 || !video.videoWidth) return;
       r.render(video, { mirror: mirrorRef.current });
-
-      const tracker = trackerRef.current;
-      const now = performance.now();
-      const before = tracker.state;
-      tracker.tick(now);
-      if (tracker.state !== before) publish();
-
-      const det = detectorRef.current;
-      const { w: W } = vfRef.current;
-      if (!det || !W || !tracker.wantsDetection() || t - lastDetect < DETECT_INTERVAL_MS) return;
-      lastDetect = t;
-      try {
-        const res = det.detectForVideo(video, now);
-        tracker.update(mapDetections(res.detections, video.videoWidth, W, mirrorRef.current), now);
-        publish();
-      } catch {
-        // Un fotogramma saltato non deve fermare il ciclo.
-      }
     };
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [publish]);
-
-  // Tocco sul mirino: sceglie il soggetto. Un nuovo tocco sostituisce il precedente.
-  const selectAt = useCallback((x, y) => {
-    if (status !== 'live' || detectState !== 'ready') return;
-    trackerRef.current.start(x, y, performance.now());
-    publish();
-  }, [status, detectState, publish]);
-
-  const onTap = useCallback((e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    selectAt(e.clientX - rect.left, e.clientY - rect.top);
-  }, [selectAt]);
-
-  // Da tastiera (accessibilità): Invio o Spazio scelgono il soggetto al centro del mirino.
-  const onViewfinderKey = useCallback((e) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    e.preventDefault();
-    const { w: W, h: H } = vfRef.current;
-    selectAt(W / 2, H / 2);
-  }, [selectAt]);
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') (sheetOpen ? setSheetOpen(false) : onClose()); };
@@ -287,20 +210,6 @@ export default function CameraView({ onClose }) {
   const levelOk = roll != null && Math.abs(roll) < 1;
   const levelText = roll == null ? t('cam.level') : `${fmt(Math.abs(roll), 1)}°`;
 
-  let pill;
-  if (status !== 'live') pill = null;
-  else if (detectState === 'loading') pill = { text: t('cam.detect.loading'), color: PAPER };
-  else if (detectState === 'failed') pill = { text: t('cam.detect.failed'), color: PAPER };
-  else if (trackState === 'seeking') pill = { text: t('cam.seeking'), color: PAPER };
-  else if (trackState === 'none') pill = { text: t('cam.detect.none'), color: PAPER };
-  else if (trackState === 'lost') pill = { text: t('cam.lost'), color: PAPER };
-  else if (trackState === 'tracking' && subject) pill = { text: t(`state.${subject.state}`), color: subject.state === 'on' ? TEAL : PAPER };
-  else pill = { text: t('cam.tapHint'), color: PAPER };
-
-  const sc = subject && (subject.state === 'on' ? TEAL : PAPER);
-  const b = subject && subject.box;
-  const k = b ? Math.min(14, b.w / 3, b.h / 3) : 0;
-
   return (
     <div className="cam" role="dialog" aria-modal="true" aria-label={t('cam.dialog')}>
       <div className="cam-top">
@@ -323,15 +232,7 @@ export default function CameraView({ onClose }) {
       </div>
 
       <div className="cam-stage" ref={stageRef}>
-        <div
-          className="vf"
-          style={{ width: vf.w, height: vf.h }}
-          onClick={onTap}
-          onKeyDown={onViewfinderKey}
-          role="button"
-          tabIndex={0}
-          aria-label={t('cam.viewfinder')}
-        >
+        <div className="vf" style={{ width: vf.w, height: vf.h }}>
           <video ref={videoRef} className="vf-video" playsInline muted autoPlay />
           <canvas ref={canvasRef} className="vf-canvas" />
           {vf.w > 0 && (
@@ -344,26 +245,6 @@ export default function CameraView({ onClose }) {
                   <line x1="0" y1={(2 * vf.h) / 3} x2={vf.w} y2={(2 * vf.h) / 3} />
                 </g>
               )}
-              {tapPoint && <circle className="tap-ring" cx={tapPoint.x} cy={tapPoint.y} r="22" fill="none" stroke={PAPER} strokeWidth="2" />}
-              {subject && (
-                <g>
-                  <g stroke={sc} strokeWidth="2" fill="none">
-                    <path d={`M${b.x},${b.y + k}V${b.y}H${b.x + k}`} />
-                    <path d={`M${b.x + b.w - k},${b.y}H${b.x + b.w}V${b.y + k}`} />
-                    <path d={`M${b.x},${b.y + b.h - k}V${b.y + b.h}H${b.x + k}`} />
-                    <path d={`M${b.x + b.w - k},${b.y + b.h}H${b.x + b.w}V${b.y + b.h - k}`} />
-                  </g>
-                  {(subject.state === 'near' || subject.state === 'off') && (
-                    <g>
-                      <line x1={subject.anchor.x} y1={subject.anchor.y} x2={subject.nearest.x} y2={subject.nearest.y} stroke={PAPER} strokeWidth="1.5" strokeDasharray="4 5" />
-                      <circle cx={subject.nearest.x} cy={subject.nearest.y} r="7" fill="none" stroke={PAPER} strokeWidth="1.5" />
-                    </g>
-                  )}
-                  <circle cx={subject.anchor.x} cy={subject.anchor.y} r="6" fill={sc} />
-                  {subject.state === 'on' && <circle cx={subject.anchor.x} cy={subject.anchor.y} r="11" fill="none" stroke={TEAL} strokeOpacity="0.4" strokeWidth="5" />}
-                  <text x={b.x + 2} y={Math.max(14, b.y - 8)} fill={sc} fontSize="12" fontWeight="600" fontFamily="Gelasio, Georgia, serif">{t(`subject.${b.category}`, null, t('subject.default'))}</text>
-                </g>
-              )}
             </svg>
           )}
           {flash && <div className="vf-flash" />}
@@ -372,10 +253,10 @@ export default function CameraView({ onClose }) {
         {toast && <div className="glass-pill toast" role="status">{toast}</div>}
         {status === 'error' && <p className="cam-error" role="alert">{t(error)}</p>}
         {status === 'starting' && <p className="cam-hint">{t('cam.starting')}</p>}
-        {pill && (
-          <div className="glass-pill status" role="status">
-            <span className="dot" style={{ background: pill.color }} />
-            {pill.text}
+        {status === 'live' && gridOn && (
+          <div className="glass-pill status">
+            <span className="dot" style={{ background: PAPER }} />
+            {t('cam.gridLabel')}
           </div>
         )}
       </div>
@@ -409,7 +290,7 @@ export default function CameraView({ onClose }) {
           <button
             type="button"
             className="flip"
-            onClick={() => { trackerRef.current.reset(); publish(); setFacing((f) => (f === 'user' ? 'environment' : 'user')); }}
+            onClick={() => setFacing((f) => (f === 'user' ? 'environment' : 'user'))}
             aria-label={t('cam.flip')}
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={PAPER} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8" /><path d="M4 4v4h4" /><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16" /><path d="M20 20v-4h-4" /></svg>

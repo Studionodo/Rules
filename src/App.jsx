@@ -6,7 +6,7 @@ import DeepDive from './components/DeepDive.jsx';
 import LangSwitch from './components/LangSwitch.jsx';
 import { requestMotionPermission } from './camera/useLevel.js';
 
-// La fotocamera (e MediaPipe) si scaricano solo quando servono.
+// La fotocamera si scarica solo quando serve.
 const CameraView = lazy(() => import('./components/CameraView.jsx'));
 
 function MoreButton({ id, title, onOpen, dark = false }) {
